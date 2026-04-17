@@ -1,1 +1,22 @@
+{
+  "categories": [
+    { "name": "Weapons", "file": "weapons.json" },
+    { "name": "Chest Armor", "file": "chest.json" },
+    { "name": "Head Armor", "file": "head.json" },
+    { "name": "Foot Armor", "file": "foot.json" },
+    { "name": "Off-Hands", "file": "off_hands.json" },
+    { "name": "Capes", "file": "capes.json" },
+    { "name": "Bags", "file": "bags.json" },
+    { "name": "Mount", "file": "mount.json" },
+    { "name": "Consumable", "file": "consumable.json" },
+    { "name": "Gathering Equipment", "file": "gathering.json" },
+    { "name": "Crafting", "file": "crafting.json" },
+    { "name": "Artifact", "file": "artifact.json" },
+    { "name": "Farming", "file": "farming.json" },
+    { "name": "Furniture", "file": "furniture.json" },
+    { "name": "Luxury Goods", "file": "luxury.json" },
+    { "name": "Vanity", "file": "vanity.json" },
+    { "name": "Other", "file": "other.json" }
+  ]
+}
 
