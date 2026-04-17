@@ -1,1 +1,19 @@
+{
+  "Cloth Armor": [
+    { "n": "Scholar Robe", "id": "ARMOR_CLOTH_SET1" },
+    { "n": "Cleric Robe", "id": "ARMOR_CLOTH_SET2" },
+    { "n": "Mage Robe", "id": "ARMOR_CLOTH_SET3" },
+    { "n": "Feyscale Robe", "id": "ARMOR_CLOTH_FEY" }
+  ],
+  "Leather Armor": [
+    { "n": "Mercenary Jacket", "id": "ARMOR_LEATHER_SET1" },
+    { "n": "Assassin Jacket", "id": "ARMOR_LEATHER_SET3" },
+    { "n": "Hellion Jacket", "id": "ARMOR_LEATHER_SET_HELL" }
+  ],
+  "Plate Armor": [
+    { "n": "Soldier Armor", "id": "ARMOR_PLATE_SET1" },
+    { "n": "Knight Armor", "id": "ARMOR_PLATE_SET2" },
+    { "n": "Guardian Armor", "id": "ARMOR_PLATE_SET3" }
+  ]
+}
 
