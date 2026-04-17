@@ -2,221 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z MARKET | Professional Trader</title>
+    <title>Z MARKET | JSON Sync Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0b; color: #e4e4e7; }
-        .glass { background: rgba(23, 23, 26, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .item-slot { background: #1c1c1e; position: relative; overflow: hidden; }
-        
-        /* Tier Borders */
-        .t4 { border: 2px solid #3b82f6; }
-        .t5 { border: 2px solid #ef4444; }
-        .t6 { border: 2px solid #f97316; }
-        .t7 { border: 2px solid #eab308; }
-        .t8 { border: 2px solid #fafafa; box-shadow: inset 0 0 10px rgba(255,255,255,0.1); }
-        
-        /* Masterpiece Glow */
-        .q5 { shadow: 0 0 20px rgba(234, 179, 8, 0.3); border-style: double; }
-        
-        .nav-column { height: 400px; overflow-y: auto; scrollbar-width: none; }
-        .nav-column::-webkit-scrollbar { display: none; }
-        
-        .btn-nav { width: 100%; text-align: left; padding: 12px; border-radius: 12px; margin-bottom: 4px; transition: all 0.2s; font-size: 14px; font-weight: 600; }
-        .btn-nav:hover { background: rgba(255,255,255,0.05); }
-        .btn-active { background: #3b82f6 !important; color: white; }
+        body { background-color: #0c0c0d; color: #d1d1d1; font-family: 'Inter', sans-serif; }
+        .glass { background: #141416; border: 1px solid #2d2d30; border-radius: 20px; }
+        select {
+            background: #1a1a1c; border: 1px solid #3f3f46; color: white;
+            padding: 12px; border-radius: 10px; width: 100%; outline: none;
+        }
+        select:disabled { opacity: 0.2; cursor: not-allowed; }
+        label { font-size: 10px; font-weight: 800; color: #71717a; text-transform: uppercase; margin-bottom: 5px; display: block; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-10 max-w-5xl mx-auto">
 
-    <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-black italic mb-8">Z MARKET <span class="text-blue-500 text-sm not-italic font-medium ml-2">JSON DRIVE v1.0</span></h1>
+
+    <div class="glass p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <div>
-                <h1 class="text-3xl font-black italic tracking-tighter">Z MARKET</h1>
-                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Advanced Price Engine</p>
-            </div>
-            <div class="text-right">
-                <div class="text-xs text-green-500 font-black tracking-widest uppercase">API: Connected</div>
-                <div class="text-[10px] text-gray-500">Brecilien Market Data</div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="glass p-3 rounded-2xl">
-                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">1. Main Category</p>
-                <div class="nav-column" id="col-main">
-                    <button class="btn-nav btn-active" onclick="selectMain('Weapons', this)">Weapons</button>
-                    <button class="btn-nav" onclick="selectMain('Chest Armor', this)">Chest Armor</button>
-                    <button class="btn-nav" onclick="selectMain('Head Armor', this)">Head Armor</button>
-                    <button class="btn-nav" onclick="selectMain('Foot Armor', this)">Foot Armor</button>
-                </div>
-            </div>
-
-            <div class="glass p-3 rounded-2xl">
-                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">2. Sub-Category</p>
-                <div class="nav-column" id="col-sub">
-                    </div>
-            </div>
-
-            <div class="glass p-3 rounded-2xl">
-                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">3. Item Selection</p>
-                <div class="nav-column" id="col-item">
-                    </div>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-[32px] mb-8 grid grid-cols-3 gap-6">
-            <div>
-                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Tier</label>
-                <select id="tier" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
-                    <option value="T4">Tier 4</option>
-                    <option value="T5">Tier 5</option>
-                    <option value="T6">Tier 6</option>
-                    <option value="T7">Tier 7</option>
-                    <option value="T8" selected>Tier 8</option>
+                <label>1. Main Category</label>
+                <select id="main-menu" onchange="loadSubCategoryFile(this.value)">
+                    <option value="">Loading Categories...</option>
                 </select>
             </div>
             <div>
-                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Enchantment</label>
-                <select id="enchant" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
-                    <option value="0">Flat (.0)</option>
-                    <option value="1">Uncommon (.1)</option>
-                    <option value="2">Rare (.2)</option>
-                    <option value="3" selected>Exceptional (.3)</option>
-                    <option value="4">Pristine (.4)</option>
+                <label>2. Sub-Category</label>
+                <select id="sub-menu" onchange="fillItemMenu()" disabled>
+                    <option value="">--</option>
                 </select>
             </div>
             <div>
-                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Quality</label>
-                <select id="quality" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
-                    <option value="1">Normal</option>
-                    <option value="2">Good</option>
-                    <option value="3">Outstanding</option>
-                    <option value="4">Excellent</option>
-                    <option value="5" selected>Masterpiece</option>
+                <label>3. Specific Item</label>
+                <select id="item-menu" onchange="updateView()" disabled>
+                    <option value="">--</option>
                 </select>
             </div>
         </div>
 
-        <div id="display-container" class="max-w-xl mx-auto hidden">
-            <div class="glass p-6 rounded-[40px] border-l-4 border-blue-500 flex items-center justify-between shadow-2xl">
-                <div class="flex items-center gap-6">
-                    <div id="item-frame" class="item-slot w-24 h-24 rounded-3xl flex items-center justify-center t8">
-                        <img id="item-img" src="" class="w-20 h-20 object-contain z-10">
-                        <div id="tier-badge" class="absolute top-0 left-0 bg-white text-black font-black text-[10px] px-2 py-0.5 rounded-br-xl">T8</div>
-                    </div>
+        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/5">
+            <select id="tier" onchange="updateView()"><option value="T8">Tier 8</option><option value="T7">Tier 7</option><option value="T6">Tier 6</option><option value="T5">Tier 5</option><option value="T4">Tier 4</option></select>
+            <select id="enchant" onchange="updateView()"><option value="0">.0</option><option value="1">.1</option><option value="2">.2</option><option value="3" selected>.3</option></select>
+            <select id="quality" onchange="updateView()"><option value="1">Normal</option><option value="5" selected>Masterpiece</option></select>
+        </div>
 
-                    <div>
-                        <h2 id="item-name" class="text-2xl font-black text-white leading-tight">...</h2>
-                        <div class="flex gap-2 mt-2">
-                            <span id="enchant-badge" class="text-[10px] font-black px-3 py-1 rounded-full bg-blue-500/20 text-blue-400">.0</span>
-                            <span id="quality-badge" class="text-[10px] font-black px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400">Normal</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-right">
-                    <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Lowest Price</div>
-                    <div class="text-3xl font-black text-white italic tracking-tighter">--</div>
-                    <div class="text-[10px] text-blue-400 font-black uppercase mt-1">Fetching...</div>
-                </div>
+        <div id="display" class="hidden mt-10 p-8 border border-blue-500/30 rounded-3xl bg-black/20 flex items-center gap-8">
+            <div class="w-24 h-24 bg-black border-2 border-white/10 rounded-2xl flex items-center justify-center relative">
+                <img id="render" src="" class="w-20 h-20 object-contain">
+                <div id="t-tag" class="absolute top-0 left-0 bg-white text-black text-[10px] font-bold px-1 rounded-br"></div>
+            </div>
+            <div>
+                <h2 id="final-name" class="text-2xl font-black italic"></h2>
+                <p id="final-sub" class="text-xs text-blue-400 font-bold uppercase"></p>
             </div>
         </div>
     </div>
 
     <script>
-        // DATA DICTIONARY (Mappings)
-        const itemDatabase = {
-            "Weapons": {
-                "Bow": [
-                    { name: "Bow", id: "MAIN_BOW" },
-                    { name: "Warbow", id: "MAIN_WARBOW" },
-                    { name: "Bow of Badon", id: "MAIN_BOW_KEEPER" },
-                    { name: "Mistpiercer", id: "MAIN_BOW_CRYSTAL" }
-                ],
-                "Dagger": [
-                    { name: "Dagger", id: "MAIN_DAGGER" },
-                    { name: "Bloodletter", id: "MAIN_DAGGER_HELL" },
-                    { name: "Deathgivers", id: "MAIN_DAGGER_CRYSTAL" }
-                ]
-            },
-            "Chest Armor": {
-                "Cloth Armor": [
-                    { name: "Scholar Robe", id: "ARMOR_CLOTH_SET1" },
-                    { name: "Cleric Robe", id: "ARMOR_CLOTH_SET2" },
-                    { name: "Mage Robe", id: "ARMOR_CLOTH_SET3" },
-                    { name: "Cultist Robe", id: "ARMOR_CLOTH_SET_HELL" }
-                ]
-            }
-        };
+        let currentFileData = {};
 
-        let selectedBaseID = "";
-        let selectedName = "";
-
-        function selectMain(cat, el) {
-            document.querySelectorAll('#col-main .btn-nav').forEach(b => b.classList.remove('btn-active'));
-            el.classList.add('btn-active');
-            
-            const subCol = document.getElementById('col-sub');
-            subCol.innerHTML = "";
-            
-            const subs = Object.keys(itemDatabase[cat] || {});
-            subs.forEach(s => {
-                subCol.innerHTML += `<button class="btn-nav" onclick="selectSub('${cat}', '${s}', this)">${s}</button>`;
+        // INITIAL LOAD: Get the 18 Main Categories
+        fetch('main_categories.json')
+            .then(res => res.json())
+            .then(data => {
+                const main = document.getElementById('main-menu');
+                main.innerHTML = '<option value="">Select Category</option>';
+                data.categories.forEach(cat => {
+                    main.innerHTML += `<option value="${cat.file}">${cat.name}</option>`;
+                });
             });
-            document.getElementById('col-item').innerHTML = "";
-        }
 
-        function selectSub(cat, sub, el) {
-            document.querySelectorAll('#col-sub .btn-nav').forEach(b => b.classList.remove('btn-active'));
-            el.classList.add('btn-active');
+        // STEP 1 -> STEP 2: Load the specific JSON file (e.g. chest.json)
+        async function loadSubCategoryFile(fileName) {
+            if (!fileName) return;
+            const res = await fetch(fileName);
+            currentFileData = await res.json();
+
+            const subMenu = document.getElementById('sub-menu');
+            const itemMenu = document.getElementById('item-menu');
             
-            const itemCol = document.getElementById('col-item');
-            itemCol.innerHTML = "";
-            
-            const items = itemDatabase[cat][sub];
-            items.forEach(i => {
-                itemCol.innerHTML += `<button class="btn-nav" onclick="setFinalItem('${i.id}', '${i.name}', this)">${i.name}</button>`;
+            subMenu.innerHTML = '<option value="">Select Sub-Category</option>';
+            itemMenu.innerHTML = '<option value="">--</option>';
+            itemMenu.disabled = true;
+
+            Object.keys(currentFileData).forEach(key => {
+                subMenu.innerHTML += `<option value="${key}">${key}</option>`;
             });
+            subMenu.disabled = false;
         }
 
-        function setFinalItem(id, name, el) {
-            document.querySelectorAll('#col-item .btn-nav').forEach(b => b.classList.remove('btn-active'));
-            el.classList.add('btn-active');
-            
-            selectedBaseID = id;
-            selectedName = name;
-            updateView();
+        // STEP 2 -> STEP 3: Fill the items based on Sub-Category choice
+        function fillItemMenu() {
+            const subKey = document.getElementById('sub-menu').value;
+            const itemMenu = document.getElementById('item-menu');
+            itemMenu.innerHTML = '<option value="">Select Item</option>';
+
+            currentFileData[subKey].forEach(item => {
+                itemMenu.innerHTML += `<option value="${item.id}" data-name="${item.n}">${item.n}</option>`;
+            });
+            itemMenu.disabled = false;
         }
 
+        // FINAL STEP: Show result
         function updateView() {
-            if(!selectedBaseID) return;
+            const itemMenu = document.getElementById('item-menu');
+            const id = itemMenu.value;
+            if (!id) return;
 
+            const name = itemMenu.options[itemMenu.selectedIndex].getAttribute('data-name');
             const tier = document.getElementById('tier').value;
-            const enchant = document.getElementById('enchant').value;
-            const quality = document.getElementById('quality').value;
-            
-            const fullID = `${tier}_${selectedBaseID}${enchant > 0 ? '@' + enchant : ''}`;
-            const imgUrl = `https://render.albiononline.com/v1/item/${fullID}.png?quality=${quality}`;
+            const enc = document.getElementById('enchant').value;
+            const qual = document.getElementById('quality').value;
 
-            // Update UI
-            document.getElementById('display-container').classList.remove('hidden');
-            document.getElementById('item-name').innerText = selectedName;
-            document.getElementById('item-img').src = imgUrl;
-            document.getElementById('tier-badge').innerText = tier;
-            document.getElementById('enchant-badge').innerText = `.${enchant} Enchanted`;
+            const fullID = `${tier}_${id}${enc > 0 ? '@' + enc : ''}`;
             
-            // Update Visual Frame
-            const frame = document.getElementById('item-frame');
-            frame.className = `item-slot w-24 h-24 rounded-3xl flex items-center justify-center ${tier.toLowerCase()} ${quality == 5 ? 'q5' : ''}`;
-            
-            console.log("System Ready to fetch prices for:", fullID);
+            document.getElementById('display').classList.remove('hidden');
+            document.getElementById('final-name').innerText = name;
+            document.getElementById('final-sub').innerText = document.getElementById('sub-menu').value;
+            document.getElementById('t-tag').innerText = tier;
+            document.getElementById('render').src = `https://render.albiononline.com/v1/item/${fullID}.png?quality=${qual}`;
         }
-
-        // Initialize with Weapons
-        selectMain('Weapons', document.querySelector('#col-main .btn-nav'));
     </script>
 </body>
 </html>
