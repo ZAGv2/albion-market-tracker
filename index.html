@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Z MARKET | Alpha v9.3</title>
+    <title>Z MARKET | Alpha v9.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -55,6 +55,24 @@
         }
 
         .bottom-nav { height: 80px; padding-bottom: var(--safe-bottom); }
+
+        .city-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .city-chip.active {
+            border-color: #a855f7;
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -130,62 +148,45 @@
             <section class="mb-6">
                 <div class="px-5 mb-3 flex justify-between items-end">
                     <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">Trending Now</h3>
-                    <span class="text-[8px] font-bold text-purple-400 uppercase">View All</span>
                 </div>
                 <div class="flex gap-4 overflow-x-auto px-5 no-scrollbar">
                     <div class="min-w-[140px] glass p-4 rounded-[24px] border-b-2 border-green-500">
                         <div class="text-xl mb-2">🐎</div>
                         <div class="text-[10px] font-black text-white uppercase">Swiftclaw</div>
-                        <div class="text-[9px] text-green-400 font-bold">+12.4%</div>
+                        <div class="text-[9px] text-green-400 font-bold">Best: 142k</div>
                     </div>
                     <div class="min-w-[140px] glass p-4 rounded-[24px] border-b-2 border-purple-500">
                         <div class="text-xl mb-2">⚔️</div>
                         <div class="text-[10px] font-black text-white uppercase">Carving</div>
-                        <div class="text-[9px] text-purple-400 font-bold">High Demand</div>
-                    </div>
-                    <div class="min-w-[140px] glass p-4 rounded-[24px] border-b-2 border-blue-500">
-                        <div class="text-xl mb-2">🧥</div>
-                        <div class="text-[10px] font-black text-white uppercase">Mercenary</div>
-                        <div class="text-[9px] text-blue-400 font-bold">Stable</div>
+                        <div class="text-[9px] text-purple-400 font-bold">Best: 89k</div>
                     </div>
                 </div>
             </section>
 
-            <section class="p-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Category</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>All Items</option></select>
-                </div>
+            <section class="p-4 grid grid-cols-2 gap-2">
                 <div class="space-y-1">
                     <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Tier</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>T8</option></select>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>T8</option><option>T7</option><option>T6</option></select>
                 </div>
                 <div class="space-y-1">
                     <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Enchant</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>.0</option></select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Quality</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>Normal</option></select>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>.0</option><option>.1</option><option>.2</option><option>.3</option></select>
                 </div>
             </section>
         </div>
 
         <section id="itemList" class="p-4 space-y-3 pb-32 hidden">
-            <div onclick="showChart('Elder\'s Bow', 'T8_MAIN_BOW', 'purple')" class="glass p-5 rounded-[32px] flex justify-between items-center active:scale-95 transition-all cursor-pointer border-l-4 border-purple-500">
+            <div onclick="showChart('Elder\'s Bow', '840,000', 'Fort Sterling')" class="glass p-5 rounded-[32px] flex justify-between items-center active:scale-95 transition-all cursor-pointer border-l-4 border-green-500">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-xl">🏹</div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <div class="font-bold text-white text-sm">Elder's Bow</div>
-                            <span class="bg-green-500/10 text-green-400 text-[7px] px-2 py-0.5 rounded-full font-black uppercase">Low Price</span>
-                        </div>
-                        <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">T8 flat</div>
+                        <div class="font-bold text-white text-sm uppercase">Elder's Bow</div>
+                        <div class="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Global Lowest Price</div>
                     </div>
                 </div>
                 <div class="text-right">
-                    <div class="font-black text-xl text-white">840k</div>
-                    <div class="text-[8px] text-purple-400 font-bold uppercase tracking-widest">Caerleon</div>
+                    <div class="font-black text-xl text-white italic">840k</div>
+                    <div class="text-[8px] text-green-400 font-black uppercase tracking-widest">Fort Sterling</div>
                 </div>
             </div>
         </section>
@@ -213,18 +214,30 @@
     <div id="modalOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[80] hidden opacity-0 transition-all duration-300" onclick="closeChart()"></div>
     <div id="chartSheet" class="fixed bottom-0 left-0 right-0 glass rounded-t-[40px] z-[90] translate-y-full transition-transform duration-500 p-8 max-h-[90vh] overflow-y-auto no-scrollbar">
         <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
-        <div class="flex justify-between items-start mb-10">
+        
+        <div class="flex justify-between items-start mb-6">
             <div>
-                <h2 id="mTitle" class="text-3xl font-black italic uppercase text-white leading-none">ITEM</h2>
-                <div id="mStatus" class="text-[9px] font-black text-purple-500 uppercase mt-3">Syncing Live...</div>
+                <h2 id="mTitle" class="text-2xl font-black italic uppercase text-white leading-none">ITEM</h2>
+                <div class="text-[9px] font-black text-slate-500 uppercase mt-2">Historical Data</div>
             </div>
             <div class="text-right">
-                <div id="mPrice" class="text-3xl font-black text-white leading-none">---</div>
-                <div class="text-[9px] font-bold text-slate-500 uppercase mt-2">Market Price</div>
+                <div id="mPrice" class="text-3xl font-black text-white italic leading-none">---</div>
+                <div id="mCity" class="text-[9px] font-black text-purple-500 uppercase mt-2">---</div>
             </div>
         </div>
-        <div class="h-64 w-full mb-10"><canvas id="priceChart"></canvas></div>
-        <button onclick="closeChart()" class="w-full z-gradient py-5 rounded-3xl font-black text-white uppercase text-[10px] tracking-widest">Close Terminal</button>
+
+        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-2">
+            <div class="city-chip active" onclick="updateCityPrice('Fort Sterling', '840,000')">F.Sterling</div>
+            <div class="city-chip" onclick="updateCityPrice('Caerleon', '910,000')">Caerleon</div>
+            <div class="city-chip" onclick="updateCityPrice('Bridgewatch', '865,000')">Bridgewatch</div>
+            <div class="city-chip" onclick="updateCityPrice('Martlock', '855,000')">Martlock</div>
+            <div class="city-chip" onclick="updateCityPrice('Lymhurst', '880,000')">Lymhurst</div>
+            <div class="city-chip" onclick="updateCityPrice('Thetford', '845,000')">Thetford</div>
+        </div>
+
+        <div class="h-56 w-full mb-8"><canvas id="priceChart"></canvas></div>
+        
+        <button onclick="closeChart()" class="w-full z-gradient py-5 rounded-3xl font-black text-white uppercase text-[10px] tracking-widest">Back to Market</button>
     </div>
 
     <script>
@@ -251,14 +264,24 @@
             }
         }
 
-        function toggleAuthModal() { document.getElementById('authOverlay').classList.toggle('hidden'); }
-
-        function showChart(name, id, color) {
+        function showChart(name, price, city) {
             document.getElementById('mTitle').innerText = name;
+            document.getElementById('mPrice').innerText = price;
+            document.getElementById('mCity').innerText = city;
             document.getElementById('modalOverlay').classList.remove('hidden');
             setTimeout(() => document.getElementById('modalOverlay').classList.add('opacity-100'), 10);
             document.getElementById('chartSheet').classList.remove('translate-y-full');
-            renderChart(color);
+            renderChart();
+        }
+
+        function updateCityPrice(city, price) {
+            document.getElementById('mPrice').innerText = price;
+            document.getElementById('mCity').innerText = city;
+            // Update active state of chips
+            document.querySelectorAll('.city-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.innerText.toLowerCase().includes(city.substring(0,3).toLowerCase()));
+            });
+            renderChart(); // Refresh chart data for new city
         }
 
         function closeChart() {
@@ -267,16 +290,17 @@
             setTimeout(() => document.getElementById('modalOverlay').classList.add('hidden'), 300);
         }
 
-        function renderChart(color) {
+        function toggleAuthModal() { document.getElementById('authOverlay').classList.toggle('hidden'); }
+
+        function renderChart() {
             if (chart) chart.destroy();
-            const stroke = color === 'purple' ? '#a855f7' : '#6366f1';
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Array(12).fill(''),
+                    labels: Array(10).fill(''),
                     datasets: [{
-                        data: Array.from({length: 12}, () => Math.floor(Math.random() * 40) + 60),
-                        borderColor: stroke,
+                        data: Array.from({length: 10}, () => Math.floor(Math.random() * 30) + 70),
+                        borderColor: '#a855f7',
                         borderWidth: 3,
                         tension: 0.4,
                         pointRadius: 0,
