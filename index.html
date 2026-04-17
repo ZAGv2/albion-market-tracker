@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Z MARKET | Alpha v9.4</title>
+    <title>Z MARKET | Alpha v9.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -163,14 +163,40 @@
                 </div>
             </section>
 
-            <section class="p-4 grid grid-cols-2 gap-2">
+            <section class="p-4 grid grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Category</label>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
+                        <option>All Items</option>
+                        <option>Weapons</option>
+                        <option>Armor</option>
+                        <option>Accessories</option>
+                        <option>Consumables</option>
+                        <option>Mounts</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Quality</label>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
+                        <option>Normal</option>
+                        <option>Good</option>
+                        <option>Outstanding</option>
+                        <option>Excellent</option>
+                        <option>Masterpiece</option>
+                    </select>
+                </div>
                 <div class="space-y-1">
                     <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Tier</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>T8</option><option>T7</option><option>T6</option></select>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
+                        <option>T8</option><option>T7</option><option>T6</option><option>T5</option>
+                        <option>T4</option><option>T3</option><option>T2</option><option>T1</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Enchant</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none"><option>.0</option><option>.1</option><option>.2</option><option>.3</option></select>
+                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
+                        <option>.0</option><option>.1</option><option>.2</option><option>.3</option><option>.4</option>
+                    </select>
                 </div>
             </section>
         </div>
@@ -214,7 +240,6 @@
     <div id="modalOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[80] hidden opacity-0 transition-all duration-300" onclick="closeChart()"></div>
     <div id="chartSheet" class="fixed bottom-0 left-0 right-0 glass rounded-t-[40px] z-[90] translate-y-full transition-transform duration-500 p-8 max-h-[90vh] overflow-y-auto no-scrollbar">
         <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
-        
         <div class="flex justify-between items-start mb-6">
             <div>
                 <h2 id="mTitle" class="text-2xl font-black italic uppercase text-white leading-none">ITEM</h2>
@@ -225,7 +250,6 @@
                 <div id="mCity" class="text-[9px] font-black text-purple-500 uppercase mt-2">---</div>
             </div>
         </div>
-
         <div class="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-2">
             <div class="city-chip active" onclick="updateCityPrice('Fort Sterling', '840,000')">F.Sterling</div>
             <div class="city-chip" onclick="updateCityPrice('Caerleon', '910,000')">Caerleon</div>
@@ -234,9 +258,7 @@
             <div class="city-chip" onclick="updateCityPrice('Lymhurst', '880,000')">Lymhurst</div>
             <div class="city-chip" onclick="updateCityPrice('Thetford', '845,000')">Thetford</div>
         </div>
-
         <div class="h-56 w-full mb-8"><canvas id="priceChart"></canvas></div>
-        
         <button onclick="closeChart()" class="w-full z-gradient py-5 rounded-3xl font-black text-white uppercase text-[10px] tracking-widest">Back to Market</button>
     </div>
 
@@ -277,11 +299,10 @@
         function updateCityPrice(city, price) {
             document.getElementById('mPrice').innerText = price;
             document.getElementById('mCity').innerText = city;
-            // Update active state of chips
             document.querySelectorAll('.city-chip').forEach(chip => {
                 chip.classList.toggle('active', chip.innerText.toLowerCase().includes(city.substring(0,3).toLowerCase()));
             });
-            renderChart(); // Refresh chart data for new city
+            renderChart();
         }
 
         function closeChart() {
