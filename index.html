@@ -2,127 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Z MARKET | JSON Sync Engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z MARKET | Central Command</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="market-logic.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0c0c0d; color: #d1d1d1; font-family: 'Inter', sans-serif; }
-        .glass { background: #141416; border: 1px solid #2d2d30; border-radius: 20px; }
-        select {
-            background: #1a1a1c; border: 1px solid #3f3f46; color: white;
-            padding: 12px; border-radius: 10px; width: 100%; outline: none;
+        body { 
+            background-color: #0c0c0d; 
+            color: #d1d1d1; 
+            font-family: 'Inter', sans-serif; 
         }
-        select:disabled { opacity: 0.2; cursor: not-allowed; }
-        label { font-size: 10px; font-weight: 800; color: #71717a; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .glass-panel { 
+            background: rgba(20, 20, 22, 0.8); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        select {
+            background: #1a1a1c;
+            border: 1px solid #3f3f46;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        select:hover:not(:disabled) { border-color: #3b82f6; }
+        select:disabled { opacity: 0.3; cursor: not-allowed; }
+        label { 
+            font-size: 11px; 
+            font-weight: 800; 
+            color: #71717a; 
+            text-transform: uppercase; 
+            margin-bottom: 8px; 
+            display: block; 
+            letter-spacing: 0.05em;
+        }
+        .item-card {
+            background: linear-gradient(145deg, #18181b, #09090b);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
     </style>
 </head>
-<body class="p-10 max-w-5xl mx-auto">
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
 
-    <h1 class="text-3xl font-black italic mb-8">Z MARKET <span class="text-blue-500 text-sm not-italic font-medium ml-2">JSON DRIVE v1.0</span></h1>
+    <header class="flex justify-between items-center mb-12">
+        <div>
+            <h1 class="text-4xl font-black italic tracking-tighter">Z <span class="text-blue-500">MARKET</span></h1>
+            <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest">Global Database Sync</p>
+        </div>
+        <div class="text-right">
+            <span class="bg-blue-500/10 text-blue-500 text-[10px] font-black px-3 py-1 rounded-full border border-blue-500/20">SYSTEM ACTIVE</span>
+        </div>
+    </header>
 
-    <div class="glass p-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <main class="glass-panel p-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div>
-                <label>1. Main Category</label>
+                <label>Main Category</label>
                 <select id="main-menu" onchange="loadSubCategoryFile(this.value)">
-                    <option value="">Loading Categories...</option>
+                    <option value="">Initializing...</option>
                 </select>
             </div>
+
             <div>
-                <label>2. Sub-Category</label>
+                <label>Sub-Category</label>
                 <select id="sub-menu" onchange="fillItemMenu()" disabled>
                     <option value="">--</option>
                 </select>
             </div>
+
             <div>
-                <label>3. Specific Item</label>
+                <label>Specific Item</label>
                 <select id="item-menu" onchange="updateView()" disabled>
                     <option value="">--</option>
                 </select>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/5">
-            <select id="tier" onchange="updateView()"><option value="T8">Tier 8</option><option value="T7">Tier 7</option><option value="T6">Tier 6</option><option value="T5">Tier 5</option><option value="T4">Tier 4</option></select>
-            <select id="enchant" onchange="updateView()"><option value="0">.0</option><option value="1">.1</option><option value="2">.2</option><option value="3" selected>.3</option></select>
-            <select id="quality" onchange="updateView()"><option value="1">Normal</option><option value="5" selected>Masterpiece</option></select>
-        </div>
-
-        <div id="display" class="hidden mt-10 p-8 border border-blue-500/30 rounded-3xl bg-black/20 flex items-center gap-8">
-            <div class="w-24 h-24 bg-black border-2 border-white/10 rounded-2xl flex items-center justify-center relative">
-                <img id="render" src="" class="w-20 h-20 object-contain">
-                <div id="t-tag" class="absolute top-0 left-0 bg-white text-black text-[10px] font-bold px-1 rounded-br"></div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-6 bg-black/30 rounded-2xl border border-white/5 mb-10">
+            <div>
+                <label>Tier</label>
+                <select id="tier" onchange="updateView()">
+                    <option value="T8">Tier 8</option>
+                    <option value="T7">Tier 7</option>
+                    <option value="T6">Tier 6</option>
+                    <option value="T5">Tier 5</option>
+                    <option value="T4">Tier 4</option>
+                    <option value="T3">Tier 3</option>
+                </select>
             </div>
             <div>
-                <h2 id="final-name" class="text-2xl font-black italic"></h2>
-                <p id="final-sub" class="text-xs text-blue-400 font-bold uppercase"></p>
+                <label>Enchantment</label>
+                <select id="enchant" onchange="updateView()">
+                    <option value="0">.0 (None)</option>
+                    <option value="1">.1 (Uncommon)</option>
+                    <option value="2">.2 (Rare)</option>
+                    <option value="3" selected>.3 (Exceptional)</option>
+                    <option value="4">.4 (Pristine)</option>
+                </select>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+                <label>Quality</label>
+                <select id="quality" onchange="updateView()">
+                    <option value="1">Normal</option>
+                    <option value="2">Good</option>
+                    <option value="3">Outstanding</option>
+                    <option value="4">Excellent</option>
+                    <option value="5" selected>Masterpiece</option>
+                </select>
             </div>
         </div>
-    </div>
 
-    <script>
-        let currentFileData = {};
+        <div id="display" class="hidden animate-in fade-in duration-500">
+            <div class="item-card p-10 rounded-3xl flex flex-col md:flex-row items-center gap-10">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition"></div>
+                    <div class="relative w-32 h-32 bg-zinc-950 border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden">
+                        <img id="render" src="" alt="Item Render" class="w-24 h-24 object-contain z-10">
+                        <div id="t-tag" class="absolute top-0 left-0 bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded-br-lg shadow-lg"></div>
+                    </div>
+                </div>
 
-        // INITIAL LOAD: Get the 18 Main Categories
-        fetch('main_categories.json')
-            .then(res => res.json())
-            .then(data => {
-                const main = document.getElementById('main-menu');
-                main.innerHTML = '<option value="">Select Category</option>';
-                data.categories.forEach(cat => {
-                    main.innerHTML += `<option value="${cat.file}">${cat.name}</option>`;
-                });
-            });
+                <div class="text-center md:text-left">
+                    <p id="final-sub" class="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-1"></p>
+                    <h2 id="final-name" class="text-3xl md:text-4xl font-black text-white italic tracking-tight mb-2"></h2>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
+                        <span class="px-3 py-1 bg-white/5 rounded-md text-[10px] font-bold text-zinc-400 border border-white/5">FULL SYNC ENABLED</span>
+                        <span class="px-3 py-1 bg-white/5 rounded-md text-[10px] font-bold text-zinc-400 border border-white/5 uppercase">Albion API 1.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // STEP 1 -> STEP 2: Load the specific JSON file (e.g. chest.json)
-        async function loadSubCategoryFile(fileName) {
-            if (!fileName) return;
-            const res = await fetch(fileName);
-            currentFileData = await res.json();
+    </main>
 
-            const subMenu = document.getElementById('sub-menu');
-            const itemMenu = document.getElementById('item-menu');
-            
-            subMenu.innerHTML = '<option value="">Select Sub-Category</option>';
-            itemMenu.innerHTML = '<option value="">--</option>';
-            itemMenu.disabled = true;
+    <footer class="mt-12 text-center">
+        <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest leading-loose">
+            Designed for Automated Financial Trading & Bot Integration<br>
+            All assets property of Sandbox Interactive GmbH
+        </p>
+    </footer>
 
-            Object.keys(currentFileData).forEach(key => {
-                subMenu.innerHTML += `<option value="${key}">${key}</option>`;
-            });
-            subMenu.disabled = false;
-        }
-
-        // STEP 2 -> STEP 3: Fill the items based on Sub-Category choice
-        function fillItemMenu() {
-            const subKey = document.getElementById('sub-menu').value;
-            const itemMenu = document.getElementById('item-menu');
-            itemMenu.innerHTML = '<option value="">Select Item</option>';
-
-            currentFileData[subKey].forEach(item => {
-                itemMenu.innerHTML += `<option value="${item.id}" data-name="${item.n}">${item.n}</option>`;
-            });
-            itemMenu.disabled = false;
-        }
-
-        // FINAL STEP: Show result
-        function updateView() {
-            const itemMenu = document.getElementById('item-menu');
-            const id = itemMenu.value;
-            if (!id) return;
-
-            const name = itemMenu.options[itemMenu.selectedIndex].getAttribute('data-name');
-            const tier = document.getElementById('tier').value;
-            const enc = document.getElementById('enchant').value;
-            const qual = document.getElementById('quality').value;
-
-            const fullID = `${tier}_${id}${enc > 0 ? '@' + enc : ''}`;
-            
-            document.getElementById('display').classList.remove('hidden');
-            document.getElementById('final-name').innerText = name;
-            document.getElementById('final-sub').innerText = document.getElementById('sub-menu').value;
-            document.getElementById('t-tag').innerText = tier;
-            document.getElementById('render').src = `https://render.albiononline.com/v1/item/${fullID}.png?quality=${qual}`;
-        }
-    </script>
 </body>
 </html>
