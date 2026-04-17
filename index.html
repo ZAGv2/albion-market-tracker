@@ -2,336 +2,221 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Z MARKET | Alpha v9.5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z MARKET | Professional Trader</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0b; color: #e4e4e7; }
+        .glass { background: rgba(23, 23, 26, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .item-slot { background: #1c1c1e; position: relative; overflow: hidden; }
         
-        :root {
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #050505; 
-            color: #f8fafc; 
-            -webkit-tap-highlight-color: transparent;
-            overflow: hidden; 
-            height: 100vh;
-        }
-
-        .glass { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
-        .z-gradient { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); }
-        .z-text-gradient { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Tier Borders */
+        .t4 { border: 2px solid #3b82f6; }
+        .t5 { border: 2px solid #ef4444; }
+        .t6 { border: 2px solid #f97316; }
+        .t7 { border: 2px solid #eab308; }
+        .t8 { border: 2px solid #fafafa; box-shadow: inset 0 0 10px rgba(255,255,255,0.1); }
         
-        select { 
-            appearance: none; 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.5rem center;
-            background-size: 0.7em;
-        }
-
-        #sidebar { transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
-        #sidebar.active { transform: translateX(0); }
+        /* Masterpiece Glow */
+        .q5 { shadow: 0 0 20px rgba(234, 179, 8, 0.3); border-style: double; }
         
-        #sidebarOverlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        #sidebarOverlay.active { opacity: 1; pointer-events: auto; }
-
-        main { height: calc(100vh - 160px); overflow-y: auto; padding-top: var(--safe-top); }
+        .nav-column { height: 400px; overflow-y: auto; scrollbar-width: none; }
+        .nav-column::-webkit-scrollbar { display: none; }
         
-        .header-grid {
-            display: grid;
-            grid-template-columns: 40px 1fr 90px;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .bottom-nav { height: 80px; padding-bottom: var(--safe-bottom); }
-
-        .city-chip {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .city-chip.active {
-            border-color: #a855f7;
-            color: #a855f7;
-            background: rgba(168, 85, 247, 0.1);
-        }
+        .btn-nav { width: 100%; text-align: left; padding: 12px; border-radius: 12px; margin-bottom: 4px; transition: all 0.2s; font-size: 14px; font-weight: 600; }
+        .btn-nav:hover { background: rgba(255,255,255,0.05); }
+        .btn-active { background: #3b82f6 !important; color: white; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
 
-    <div id="authOverlay" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-6" onclick="toggleAuthModal()">
-        <div class="glass w-full max-w-sm p-8 rounded-[40px]" onclick="event.stopPropagation()">
-            <h2 class="text-2xl font-black text-white italic mb-2 uppercase text-center">Z <span class="z-text-gradient">AUTH</span></h2>
-            <p class="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-8 text-center">Sign in for Cloud Sync</p>
-            <input type="email" id="authEmail" placeholder="Email" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white text-sm mb-3 outline-none focus:border-purple-500">
-            <input type="password" id="authPass" placeholder="Password" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white text-sm mb-6 outline-none focus:border-purple-500">
-            <div class="flex gap-3">
-                <button onclick="handleAuth('login')" class="flex-1 py-4 z-gradient rounded-2xl font-black text-white text-[10px] uppercase">Login</button>
-                <button onclick="handleAuth('signup')" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black text-white text-[10px] uppercase">Sign Up</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[65]" onclick="toggleSidebar()"></div>
-
-    <div id="sidebar" class="fixed top-0 left-0 h-full w-[280px] glass z-[70] p-6 flex flex-col">
-        <div class="flex items-center gap-3 mb-10">
-            <div class="w-8 h-8 z-gradient rounded-lg flex items-center justify-center font-black text-xs text-white">Z</div>
-            <h2 class="text-lg font-black uppercase italic text-white leading-none">Z MARKET</h2>
-        </div>
-        
-        <nav class="space-y-2 flex-1">
-            <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-purple-500/30 font-bold uppercase text-[10px] text-purple-400">
-                <i data-lucide="layout-grid" class="w-4 h-4"></i> Marketplace
-            </div>
-            <div class="flex items-center gap-4 p-4 opacity-30 text-[10px] font-black uppercase text-white"><i data-lucide="trending-up" class="w-4 h-4"></i> Profit Tools</div>
-            <div class="flex items-center gap-4 p-4 opacity-30 text-[10px] font-black uppercase text-white"><i data-lucide="star" class="w-4 h-4"></i> Favorites</div>
-        </nav>
-
-        <div id="userProfile" class="mt-auto border-t border-white/10 pt-6">
-            <div id="loggedOutUI">
-                <button onclick="toggleAuthModal()" class="w-full py-4 bg-white/5 rounded-2xl text-[10px] font-black uppercase text-white border border-white/10">Sign In</button>
-            </div>
-            <div id="loggedInUI" class="hidden flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full z-gradient flex items-center justify-center font-black text-white">U</div>
-                <div class="flex-1 overflow-hidden">
-                    <div id="userEmailLabel" class="text-[10px] font-black text-white truncate">user@albion.com</div>
-                    <button onclick="handleLogout()" class="text-[8px] font-bold text-red-500 uppercase">Sign Out</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <header class="p-4 glass sticky top-0 z-40">
-        <div class="header-grid">
-            <button onclick="toggleSidebar()" class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 text-slate-400">
-                <i data-lucide="menu" class="w-5 h-5"></i>
-            </button>
-            <h1 class="text-lg font-black italic tracking-tighter uppercase text-white truncate text-center">
-                Z <span class="z-text-gradient">MARKET</span>
-            </h1>
-            <select id="serverSelect" class="bg-white/5 border border-white/10 text-[9px] font-black uppercase text-purple-400 px-2 py-2 rounded-xl outline-none">
-                <option value="west">AMER</option>
-                <option value="east">ASIA</option>
-                <option value="europe">EURO</option>
-            </select>
-        </div>
-    </header>
-
-    <main id="scrollContainer" class="no-scrollbar">
-        <section class="p-4">
-            <div class="relative">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 w-4 h-4"></i>
-                <input type="text" id="mainSearch" oninput="handleSearch(this.value)" placeholder="Search Albion database..." class="w-full bg-[#0f0f0f] border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-xs text-white outline-none focus:border-purple-500/50">
-            </div>
-        </section>
-
-        <div id="dashboard">
-            <section class="mb-6">
-                <div class="px-5 mb-3 flex justify-between items-end">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">Trending Now</h3>
-                </div>
-                <div class="flex gap-4 overflow-x-auto px-5 no-scrollbar">
-                    <div class="min-w-[140px] glass p-4 rounded-[24px] border-b-2 border-green-500">
-                        <div class="text-xl mb-2">🐎</div>
-                        <div class="text-[10px] font-black text-white uppercase">Swiftclaw</div>
-                        <div class="text-[9px] text-green-400 font-bold">Best: 142k</div>
-                    </div>
-                    <div class="min-w-[140px] glass p-4 rounded-[24px] border-b-2 border-purple-500">
-                        <div class="text-xl mb-2">⚔️</div>
-                        <div class="text-[10px] font-black text-white uppercase">Carving</div>
-                        <div class="text-[9px] text-purple-400 font-bold">Best: 89k</div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="p-4 grid grid-cols-2 gap-3">
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Category</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
-                        <option>All Items</option>
-                        <option>Weapons</option>
-                        <option>Armor</option>
-                        <option>Accessories</option>
-                        <option>Consumables</option>
-                        <option>Mounts</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Quality</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
-                        <option>Normal</option>
-                        <option>Good</option>
-                        <option>Outstanding</option>
-                        <option>Excellent</option>
-                        <option>Masterpiece</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Tier</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
-                        <option>T8</option><option>T7</option><option>T6</option><option>T5</option>
-                        <option>T4</option><option>T3</option><option>T2</option><option>T1</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-slate-500 ml-1">Enchant</label>
-                    <select class="w-full bg-white/5 border border-white/10 text-white text-[10px] font-bold rounded-xl p-3 outline-none">
-                        <option>.0</option><option>.1</option><option>.2</option><option>.3</option><option>.4</option>
-                    </select>
-                </div>
-            </section>
-        </div>
-
-        <section id="itemList" class="p-4 space-y-3 pb-32 hidden">
-            <div onclick="showChart('Elder\'s Bow', '840,000', 'Fort Sterling')" class="glass p-5 rounded-[32px] flex justify-between items-center active:scale-95 transition-all cursor-pointer border-l-4 border-green-500">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-xl">🏹</div>
-                    <div>
-                        <div class="font-bold text-white text-sm uppercase">Elder's Bow</div>
-                        <div class="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Global Lowest Price</div>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <div class="font-black text-xl text-white italic">840k</div>
-                    <div class="text-[8px] text-green-400 font-black uppercase tracking-widest">Fort Sterling</div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <nav class="fixed bottom-0 left-0 right-0 glass border-t border-white/5 bottom-nav z-50 flex justify-around items-center px-6">
-        <button class="flex flex-col items-center gap-1 text-purple-500">
-            <i data-lucide="home" class="w-5 h-5"></i>
-            <span class="text-[8px] font-black uppercase">Market</span>
-        </button>
-        <button class="flex flex-col items-center gap-1 text-slate-500 opacity-50">
-            <i data-lucide="zap" class="w-5 h-5"></i>
-            <span class="text-[8px] font-black uppercase">Alerts</span>
-        </button>
-        <button class="flex flex-col items-center gap-1 text-slate-500 opacity-50">
-            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-            <span class="text-[8px] font-black uppercase">Flip</span>
-        </button>
-        <button onclick="toggleSidebar()" class="flex flex-col items-center gap-1 text-slate-500 opacity-50">
-            <i data-lucide="user" class="w-5 h-5"></i>
-            <span class="text-[8px] font-black uppercase">Account</span>
-        </button>
-    </nav>
-
-    <div id="modalOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[80] hidden opacity-0 transition-all duration-300" onclick="closeChart()"></div>
-    <div id="chartSheet" class="fixed bottom-0 left-0 right-0 glass rounded-t-[40px] z-[90] translate-y-full transition-transform duration-500 p-8 max-h-[90vh] overflow-y-auto no-scrollbar">
-        <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
-        <div class="flex justify-between items-start mb-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
             <div>
-                <h2 id="mTitle" class="text-2xl font-black italic uppercase text-white leading-none">ITEM</h2>
-                <div class="text-[9px] font-black text-slate-500 uppercase mt-2">Historical Data</div>
+                <h1 class="text-3xl font-black italic tracking-tighter">Z MARKET</h1>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">Advanced Price Engine</p>
             </div>
             <div class="text-right">
-                <div id="mPrice" class="text-3xl font-black text-white italic leading-none">---</div>
-                <div id="mCity" class="text-[9px] font-black text-purple-500 uppercase mt-2">---</div>
+                <div class="text-xs text-green-500 font-black tracking-widest uppercase">API: Connected</div>
+                <div class="text-[10px] text-gray-500">Brecilien Market Data</div>
             </div>
         </div>
-        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-2">
-            <div class="city-chip active" onclick="updateCityPrice('Fort Sterling', '840,000')">F.Sterling</div>
-            <div class="city-chip" onclick="updateCityPrice('Caerleon', '910,000')">Caerleon</div>
-            <div class="city-chip" onclick="updateCityPrice('Bridgewatch', '865,000')">Bridgewatch</div>
-            <div class="city-chip" onclick="updateCityPrice('Martlock', '855,000')">Martlock</div>
-            <div class="city-chip" onclick="updateCityPrice('Lymhurst', '880,000')">Lymhurst</div>
-            <div class="city-chip" onclick="updateCityPrice('Thetford', '845,000')">Thetford</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="glass p-3 rounded-2xl">
+                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">1. Main Category</p>
+                <div class="nav-column" id="col-main">
+                    <button class="btn-nav btn-active" onclick="selectMain('Weapons', this)">Weapons</button>
+                    <button class="btn-nav" onclick="selectMain('Chest Armor', this)">Chest Armor</button>
+                    <button class="btn-nav" onclick="selectMain('Head Armor', this)">Head Armor</button>
+                    <button class="btn-nav" onclick="selectMain('Foot Armor', this)">Foot Armor</button>
+                </div>
+            </div>
+
+            <div class="glass p-3 rounded-2xl">
+                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">2. Sub-Category</p>
+                <div class="nav-column" id="col-sub">
+                    </div>
+            </div>
+
+            <div class="glass p-3 rounded-2xl">
+                <p class="text-[10px] font-black text-gray-500 uppercase mb-3 px-2">3. Item Selection</p>
+                <div class="nav-column" id="col-item">
+                    </div>
+            </div>
         </div>
-        <div class="h-56 w-full mb-8"><canvas id="priceChart"></canvas></div>
-        <button onclick="closeChart()" class="w-full z-gradient py-5 rounded-3xl font-black text-white uppercase text-[10px] tracking-widest">Back to Market</button>
+
+        <div class="glass p-6 rounded-[32px] mb-8 grid grid-cols-3 gap-6">
+            <div>
+                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Tier</label>
+                <select id="tier" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
+                    <option value="T4">Tier 4</option>
+                    <option value="T5">Tier 5</option>
+                    <option value="T6">Tier 6</option>
+                    <option value="T7">Tier 7</option>
+                    <option value="T8" selected>Tier 8</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Enchantment</label>
+                <select id="enchant" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
+                    <option value="0">Flat (.0)</option>
+                    <option value="1">Uncommon (.1)</option>
+                    <option value="2">Rare (.2)</option>
+                    <option value="3" selected>Exceptional (.3)</option>
+                    <option value="4">Pristine (.4)</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Quality</label>
+                <select id="quality" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 font-bold" onchange="updateView()">
+                    <option value="1">Normal</option>
+                    <option value="2">Good</option>
+                    <option value="3">Outstanding</option>
+                    <option value="4">Excellent</option>
+                    <option value="5" selected>Masterpiece</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="display-container" class="max-w-xl mx-auto hidden">
+            <div class="glass p-6 rounded-[40px] border-l-4 border-blue-500 flex items-center justify-between shadow-2xl">
+                <div class="flex items-center gap-6">
+                    <div id="item-frame" class="item-slot w-24 h-24 rounded-3xl flex items-center justify-center t8">
+                        <img id="item-img" src="" class="w-20 h-20 object-contain z-10">
+                        <div id="tier-badge" class="absolute top-0 left-0 bg-white text-black font-black text-[10px] px-2 py-0.5 rounded-br-xl">T8</div>
+                    </div>
+
+                    <div>
+                        <h2 id="item-name" class="text-2xl font-black text-white leading-tight">...</h2>
+                        <div class="flex gap-2 mt-2">
+                            <span id="enchant-badge" class="text-[10px] font-black px-3 py-1 rounded-full bg-blue-500/20 text-blue-400">.0</span>
+                            <span id="quality-badge" class="text-[10px] font-black px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400">Normal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Lowest Price</div>
+                    <div class="text-3xl font-black text-white italic tracking-tighter">--</div>
+                    <div class="text-[10px] text-blue-400 font-black uppercase mt-1">Fetching...</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        let chart;
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        lucide.createIcons();
-
-        function toggleSidebar() { 
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('active'); 
-            overlay.classList.toggle('active');
-        }
-
-        function handleSearch(val) {
-            const dashboard = document.getElementById('dashboard');
-            const list = document.getElementById('itemList');
-            if(val.length > 0) {
-                dashboard.classList.add('hidden');
-                list.classList.remove('hidden');
-            } else {
-                dashboard.classList.remove('hidden');
-                list.classList.add('hidden');
+        // DATA DICTIONARY (Mappings)
+        const itemDatabase = {
+            "Weapons": {
+                "Bow": [
+                    { name: "Bow", id: "MAIN_BOW" },
+                    { name: "Warbow", id: "MAIN_WARBOW" },
+                    { name: "Bow of Badon", id: "MAIN_BOW_KEEPER" },
+                    { name: "Mistpiercer", id: "MAIN_BOW_CRYSTAL" }
+                ],
+                "Dagger": [
+                    { name: "Dagger", id: "MAIN_DAGGER" },
+                    { name: "Bloodletter", id: "MAIN_DAGGER_HELL" },
+                    { name: "Deathgivers", id: "MAIN_DAGGER_CRYSTAL" }
+                ]
+            },
+            "Chest Armor": {
+                "Cloth Armor": [
+                    { name: "Scholar Robe", id: "ARMOR_CLOTH_SET1" },
+                    { name: "Cleric Robe", id: "ARMOR_CLOTH_SET2" },
+                    { name: "Mage Robe", id: "ARMOR_CLOTH_SET3" },
+                    { name: "Cultist Robe", id: "ARMOR_CLOTH_SET_HELL" }
+                ]
             }
-        }
+        };
 
-        function showChart(name, price, city) {
-            document.getElementById('mTitle').innerText = name;
-            document.getElementById('mPrice').innerText = price;
-            document.getElementById('mCity').innerText = city;
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            setTimeout(() => document.getElementById('modalOverlay').classList.add('opacity-100'), 10);
-            document.getElementById('chartSheet').classList.remove('translate-y-full');
-            renderChart();
-        }
+        let selectedBaseID = "";
+        let selectedName = "";
 
-        function updateCityPrice(city, price) {
-            document.getElementById('mPrice').innerText = price;
-            document.getElementById('mCity').innerText = city;
-            document.querySelectorAll('.city-chip').forEach(chip => {
-                chip.classList.toggle('active', chip.innerText.toLowerCase().includes(city.substring(0,3).toLowerCase()));
+        function selectMain(cat, el) {
+            document.querySelectorAll('#col-main .btn-nav').forEach(b => b.classList.remove('btn-active'));
+            el.classList.add('btn-active');
+            
+            const subCol = document.getElementById('col-sub');
+            subCol.innerHTML = "";
+            
+            const subs = Object.keys(itemDatabase[cat] || {});
+            subs.forEach(s => {
+                subCol.innerHTML += `<button class="btn-nav" onclick="selectSub('${cat}', '${s}', this)">${s}</button>`;
             });
-            renderChart();
+            document.getElementById('col-item').innerHTML = "";
         }
 
-        function closeChart() {
-            document.getElementById('modalOverlay').classList.remove('opacity-100');
-            document.getElementById('chartSheet').classList.add('translate-y-full');
-            setTimeout(() => document.getElementById('modalOverlay').classList.add('hidden'), 300);
-        }
-
-        function toggleAuthModal() { document.getElementById('authOverlay').classList.toggle('hidden'); }
-
-        function renderChart() {
-            if (chart) chart.destroy();
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: Array(10).fill(''),
-                    datasets: [{
-                        data: Array.from({length: 10}, () => Math.floor(Math.random() * 30) + 70),
-                        borderColor: '#a855f7',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(168, 85, 247, 0.05)'
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        function selectSub(cat, sub, el) {
+            document.querySelectorAll('#col-sub .btn-nav').forEach(b => b.classList.remove('btn-active'));
+            el.classList.add('btn-active');
+            
+            const itemCol = document.getElementById('col-item');
+            itemCol.innerHTML = "";
+            
+            const items = itemDatabase[cat][sub];
+            items.forEach(i => {
+                itemCol.innerHTML += `<button class="btn-nav" onclick="setFinalItem('${i.id}', '${i.name}', this)">${i.name}</button>`;
             });
         }
+
+        function setFinalItem(id, name, el) {
+            document.querySelectorAll('#col-item .btn-nav').forEach(b => b.classList.remove('btn-active'));
+            el.classList.add('btn-active');
+            
+            selectedBaseID = id;
+            selectedName = name;
+            updateView();
+        }
+
+        function updateView() {
+            if(!selectedBaseID) return;
+
+            const tier = document.getElementById('tier').value;
+            const enchant = document.getElementById('enchant').value;
+            const quality = document.getElementById('quality').value;
+            
+            const fullID = `${tier}_${selectedBaseID}${enchant > 0 ? '@' + enchant : ''}`;
+            const imgUrl = `https://render.albiononline.com/v1/item/${fullID}.png?quality=${quality}`;
+
+            // Update UI
+            document.getElementById('display-container').classList.remove('hidden');
+            document.getElementById('item-name').innerText = selectedName;
+            document.getElementById('item-img').src = imgUrl;
+            document.getElementById('tier-badge').innerText = tier;
+            document.getElementById('enchant-badge').innerText = `.${enchant} Enchanted`;
+            
+            // Update Visual Frame
+            const frame = document.getElementById('item-frame');
+            frame.className = `item-slot w-24 h-24 rounded-3xl flex items-center justify-center ${tier.toLowerCase()} ${quality == 5 ? 'q5' : ''}`;
+            
+            console.log("System Ready to fetch prices for:", fullID);
+        }
+
+        // Initialize with Weapons
+        selectMain('Weapons', document.querySelector('#col-main .btn-nav'));
     </script>
 </body>
 </html>
