@@ -1,0 +1,82 @@
+{
+  "All": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Hideout Siege Hammer", "id": "GUILD_SIEGEHAMMER" },
+    { "n": "Siege Banner", "id": "GUILD_SIEGEBANNER" },
+    { "n": "Journals", "id": "LABORER_JOURNAL" },
+    { "n": "Trophies", "id": "LABORER_TROPHY" },
+    { "n": "Contracts", "id": "LABORER_CONTRACT" },
+    { "n": "Beds", "id": "LABORER_BED" },
+    { "n": "Tables", "id": "LABORER_TABLE" },
+    { "n": "Vanity Tokens", "id": "TOKEN_VANITY" },
+    { "n": "Crystal League Tokens", "id": "TOKEN_CRYSTAL_LEAGUE" },
+    { "n": "Anchor", "id": "TOKEN_ANCHOR" },
+    { "n": "Bridgewatch Luxury", "id": "LUXURY_BRIDGEWATCH" },
+    { "n": "Fort Sterling Luxury", "id": "LUXURY_FORTSTERLING" },
+    { "n": "Lymhurst Luxury", "id": "LUXURY_LYMHURST" },
+    { "n": "Martlock Luxury", "id": "LUXURY_MARTLOCK" },
+    { "n": "Thetford Luxury", "id": "LUXURY_THETFORD" },
+    { "n": "Caerleon Luxury", "id": "LUXURY_CAERLEON" },
+    { "n": "Random Dungeons", "id": "MAP_RANDOM_DUNGEON" },
+    { "n": "Corrupted Dungeons", "id": "MAP_CORRUPTED" },
+    { "n": "Hellgates", "id": "MAP_HELLGATE" },
+    { "n": "Fishy Business", "id": "HCE_FISHY_BUSINESS" },
+    { "n": "Fistful of Silver", "id": "HCE_FISTFUL_OF_SILVER" },
+    { "n": "Lumber Lunacy", "id": "HCE_LUMBER_LUNACY" }
+  ],
+  "Guilds": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Hideout Siege Hammer", "id": "GUILD_SIEGEHAMMER" },
+    { "n": "Siege Banner", "id": "GUILD_SIEGEBANNER" }
+  ],
+  "Laborers": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Journals", "id": "LABORER_JOURNAL" },
+    { "n": "Trophies", "id": "LABORER_TROPHY" },
+    { "n": "Contracts", "id": "LABORER_CONTRACT" },
+    { "n": "Beds", "id": "LABORER_BED" },
+    { "n": "Tables", "id": "LABORER_TABLE" }
+  ],
+  "Tokens": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Vanity", "id": "TOKEN_VANITY" },
+    { "n": "Crystal League Tokens", "id": "TOKEN_CRYSTAL_LEAGUE" },
+    { "n": "Anchor", "id": "TOKEN_ANCHOR" },
+    { "n": "Others", "id": "TOKEN_OTHER" }
+  ],
+  "Luxury Goods": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Bridgewatch", "id": "LUXURY_BRIDGEWATCH" },
+    { "n": "Fort Sterling", "id": "LUXURY_FORTSTERLING" },
+    { "n": "Lymhurst", "id": "LUXURY_LYMHURST" },
+    { "n": "Martlock", "id": "LUXURY_MARTLOCK" },
+    { "n": "Thetford", "id": "LUXURY_THETFORD" },
+    { "n": "Caerleon", "id": "LUXURY_CAERLEON" },
+    { "n": "Any", "id": "LUXURY_ANY" }
+  ],
+  "Maps": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Random Dungeons", "id": "MAP_RANDOM_DUNGEON" },
+    { "n": "Corrupted Dungeons", "id": "MAP_CORRUPTED" },
+    { "n": "Hellgates", "id": "MAP_HELLGATE" }
+  ],
+  "Hardcore Expeditions": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Event", "id": "HCE_EVENT" },
+    { "n": "Fishy Business", "id": "HCE_FISHY_BUSINESS" },
+    { "n": "Fistful of Silver", "id": "HCE_FISTFUL_OF_SILVER" },
+    { "n": "Lumber Lunacy", "id": "HCE_LUMBER_LUNACY" },
+    { "n": "Fungicide", "id": "HCE_FUNGICIDE" },
+    { "n": "Preaching to the Dead", "id": "HCE_PREACHING" },
+    { "n": "Lurking Underneath", "id": "HCE_LURKING" },
+    { "n": "Stone Wars", "id": "HCE_STONE_WARS" },
+    { "n": "Three Sisters", "id": "HCE_THREE_SISTERS" },
+    { "n": "In the Raven's Claws", "id": "HCE_RAVEN_CLAWS" },
+    { "n": "Eternal Battle", "id": "HCE_ETERNAL_BATTLE" }
+  ],
+  "Quest Items": [
+    { "n": "All", "id": "ALL" },
+    { "n": "Cities", "id": "QUEST_CITIES" },
+    { "n": "Other", "id": "QUEST_OTHER" }
+  ]
+}
